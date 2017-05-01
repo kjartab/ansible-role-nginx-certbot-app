@@ -1,2 +1,14 @@
 ---
-# tasks file for ansible-role-nginx-certbot-app
+
+- name: Ensure webroot exists
+  file: path={{nginx_app_webroot}} state=directory
+
+- apt_repository: repo=ppa:certbot/certbot
+
+- apt: update_cache=yes
+
+- apt: name=certbot
+
+- template: src={{nginx_app_config_template}} dest=/etc/nginx/sites-enabled/{{nginx_app_domain_name}}
+  notify:
+    - reload nginx
