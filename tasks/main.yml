@@ -24,4 +24,4 @@
 - cron:
     name: "renew certificates"
     day: '*'
-    job: "certbot renew"
+    job: "certbot renew && /etc/init.d/nginx reload"
