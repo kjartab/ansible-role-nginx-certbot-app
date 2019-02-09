@@ -9,17 +9,13 @@
 
 - apt: name=certbot
 
-- template: src=pre.site.conf.j2 dest=/etc/nginx/sites-enabled/{{nginx_app_domain_name}}
+- template: src{{nginx_app_config_template}} dest=/etc/nginx/sites-enabled/{{nginx_app_domain_name}}
   notify:
     - reload nginx
   
 - meta: flush_handlers
   
 - shell: certbot certonly --webroot -w /var/www/{{nginx_app_domain_name}}/ -d {{nginx_app_domain_name}}  -n --agree-tos --email {{letsencrypt_email}}
-  
-- template: src={{nginx_app_config_template}} dest=/etc/nginx/sites-enabled/{{nginx_app_domain_name}}
-  notify:
-    - reload nginx
 
 - cron:
     name: "renew certificates"
