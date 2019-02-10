@@ -6,7 +6,7 @@
 - name: Install apt repo for certbot
   apt_repository: repo=ppa:certbot/certbot update_cache=yes
 
-- name: Instlal certbot
+- name: Install certbot
   apt: name=certbot
 
 - name: Setup default page 
@@ -26,7 +26,7 @@
     - reload nginx
   
 - name: Reload nginx 
-- meta: flush_handlers
+  meta: flush_handlers
 
 - name: Setup certificate renewal cronjob
   cron:
