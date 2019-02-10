@@ -3,27 +3,33 @@
 - name: Ensure webroot exists
   file: path={{nginx_app_webroot}} state=directory owner={{ webroot_owner | default('root') }} group="{{ webroot_group | default('web') }}"
 
-- apt_repository: repo=ppa:certbot/certbot
+- name: Install apt repo for certbot
+  apt_repository: repo=ppa:certbot/certbot update_cache=yes
 
-- apt: update_cache=yes
+- name: Instlal certbot
+  apt: name=certbot
 
-- apt: name=certbot
-
-- template: src=pre.site.conf.j2 dest=/etc/nginx/sites-enabled/{{nginx_app_domain_name}}
+- name: Setup default page 
+  template: src=pre.site.conf.j2 dest=/etc/nginx/sites-enabled/{{nginx_app_domain_name}}
   notify:
     - reload nginx
   
-- meta: flush_handlers
+- name: Reload nginx 
+  meta: flush_handlers
   
-- shell: certbot certonly --webroot -w /var/www/{{nginx_app_domain_name}}/ -d {{nginx_app_domain_name}}  -n --agree-tos --email {{letsencrypt_email}}
+- name: Run certbot setup
+  shell: certbot certonly --webroot -w /var/www/{{nginx_app_domain_name}}/ -d {{nginx_app_domain_name}}  -n --agree-tos --email {{letsencrypt_email}}
 
-- template: src={{nginx_app_config_template}} dest=/etc/nginx/sites-enabled/{{nginx_app_domain_name}}
+- name: Setup app page with https
+  template: src={{nginx_app_config_template}} dest=/etc/nginx/sites-enabled/{{nginx_app_domain_name}}
   notify:
     - reload nginx
   
+- name: Reload nginx 
 - meta: flush_handlers
 
-- cron:
+- name: Setup certificate renewal cronjob
+  cron:
     name: "renew certificates"
     day: '*'
     job: "certbot renew && /etc/init.d/nginx reload"
