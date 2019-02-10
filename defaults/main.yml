@@ -1,3 +1,4 @@
 ---
 # defaults file for ansible-role-nginx-certbot-app
-nginx_app_config_template: site.conf.j2
+nginx_app_config_template: site.conf.j2 
+default_webroot_group: 

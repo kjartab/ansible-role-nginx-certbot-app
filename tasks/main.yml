@@ -1,7 +1,7 @@
 ---
 
 - name: Ensure webroot exists
-  file: path={{nginx_app_webroot}} state=directory
+  file: path={{nginx_app_webroot}} state=directory owner={{ webroot_owner | default('root') }} group="{{ webroot_group | default('web') }}"
 
 - apt_repository: repo=ppa:certbot/certbot
 
@@ -9,7 +9,7 @@
 
 - apt: name=certbot
 
-- template: src{{nginx_app_config_template}} dest=/etc/nginx/sites-enabled/{{nginx_app_domain_name}}
+- template: src={{nginx_app_config_template}} dest=/etc/nginx/sites-enabled/{{nginx_app_domain_name}}
   notify:
     - reload nginx
   
