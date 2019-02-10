@@ -4,7 +4,7 @@ server {
     root /var/www/{{nginx_app_domain_name}};
 
     location ~ /.well-known {
-            allow all;
+        allow all;
     }
     
     ssl_certificate /etc/letsencrypt/live/{{nginx_app_domain_name}}/fullchain.pem;
@@ -12,6 +12,7 @@ server {
 
     index index.html;
     listen 443 ssl;
+    listen [::]:443 ipv6only=on;
 
 }
 
