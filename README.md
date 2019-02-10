@@ -3,7 +3,6 @@ Nginx-Certbot-App
 
 Setup of SPA using NGINX and Letsencrypt
 
-
 Role Variables
 --------------
 
